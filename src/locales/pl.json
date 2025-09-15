@@ -1,0 +1,83 @@
+{
+  "common": {
+    "yes": "Tak",
+    "no": "Nie",
+    "ok": "OK",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "create": "Utwórz",
+    "close": "Zamknij",
+    "back": "Wróć",
+    "search": "Szukaj",
+    "filter": "Filtruj",
+    "clear": "Wyczyść",
+    "refresh": "Odśwież",
+    "more": "Więcej",
+    "less": "Mniej",
+    "actions": "Akcje",
+    "loading": "Ładowanie",
+    "processing": "Przetwarzanie",
+    "completed": "Zakończono",
+    "failed": "Niepowodzenie",
+    "noResults": "Brak wyników",
+    "set": "Ustaw",
+    "exit": "Wyjdź",
+    "content": "-",
+    "meta": "Metadane",
+    "status": {
+      "success": "Sukces",
+      "failed": "Niepowodzenie",
+      "pending": "Oczekuje",
+      "unknown": "Nieznany"
+    }
+  },
+  "auth": {
+    "login": "Zaloguj",
+    "register": "Zarejestruj",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "email": "Adres e-mail",
+    "password": "Hasło",
+    "rememberMe": "Zapamiętaj mnie",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "logout": "Wyloguj",
+    "resetPassword": "Resetuj hasło",
+    "confirmPassword": "Potwierdź hasło",
+    "passwordsDoNotMatch": "Hasła nie pasują do siebie",
+    "invalidEmail": "Nieprawidłowy adres e-mail",
+    "invalidPassword": "Nieprawidłowe hasło",
+    "required": "Wymagane"
+  },
+  "editor": {
+    "title": "Edytor",
+    "addItem": "Dodaj element",
+    "newItem": "Nowy element",
+    "editItem": "Edytuj element",
+    "deleteItem": "Usuń element",
+    "confirmDelete": "Czy na pewno chcesz usunąć element?",
+    "confirmDeleteMessage": "Usunięcie elementu spowoduje usunięcie wszystkich jego danych.",
+    "itemNotFound": "Element nie znaleziony",
+    "unsavedChanges": "Nie zapisano zmian"
+  },
+  "sorting": {
+    "sortBy": "Sortowanie",
+    "filters": "Filtruj"
+  },
+  "fields": {
+    "id": "ID",
+    "name": "Nazwa",
+    "createdAt": "Utworzono",
+    "modifiedAt": "Zmodyfikowano",
+    "description": "Opis",
+    "location": "Lokalizacja",
+    "baseLocation": "Lokalizacja bazowa",
+    "street": "Ulica",
+    "number": "Numer",
+    "city": "Miasto",
+    "postal": "Kod pocztowy",
+    "country": "Kraj",
+    "address": "Adres"
+  }
+}

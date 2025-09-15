@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import 'tailwindcss';
+
+@source '../../**/*.js';
+
+@theme {
+    --font-sans: 'Nunito', sans-serif;
+    --color-primary-50: #fff1e0;
+  --color-primary-100: #ffe6c7;
+  --color-primary-200: #ffcd8f;
+  --color-primary-300: #ffb357;
+  --color-primary-400: #ff981a;
+  --color-primary-500: #e27b00;
+  --color-primary-600: #b36200;
+  --color-primary-700: #8a4c00;
+  --color-primary-800: #5c3200;
+  --color-primary-900: #2e1900;
+  --color-primary-950: #140b00;
+   --color-neutral-50: #f0f0f0;
+  --color-neutral-100: #dedede;
+  --color-neutral-200: #bfbfbf;
+  --color-neutral-300: #9e9e9e;
+  --color-neutral-400: #7d7d7d;
+  --color-neutral-500: #5d5d5d;
+  --color-neutral-600: #4a4a4a;
+  --color-neutral-700: #383838;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #121212;
+  --color-neutral-950: #0a0a0a;
+  --color-success-50: #f2fce9;
+  --color-success-100: #e2f8ce;
+  --color-success-200: #beef8f;
+  --color-success-300: #94e548;
+  --color-success-400: #75d21e;
+  --color-success-500: #68bb1b;
+  --color-success-600: #569a16;
+  --color-success-700: #4b8613;
+  --color-success-800: #3e7010;
+  --color-success-900: #2a4c0b;
+  --color-success-950: #1e3608;
+  --color-error-50: #fcf4f2;
+  --color-error-100: #fae9e6;
+  --color-error-200: #f3cfc8;
+  --color-error-300: #ebada2;
+  --color-error-400: #e38878;
+  --color-error-500: #d3472f;
+  --color-error-600: #c24029;
+  --color-error-700: #a83824;
+  --color-error-800: #872c1c;
+  --color-error-900: #652115;
+  --color-error-950: #48180f;
+  --color-info-50: #f5faff;
+  --color-info-100: #ebf5ff;
+  --color-info-200: #cce6ff;
+  --color-info-300: #b3d9ff;
+  --color-info-400: #8fc7ff;
+  --color-info-500: #6ab4ff;
+  --color-info-600: #42a1ff;
+  --color-info-700: #1a8cff;
+  --color-info-800: #0070e0;
+  --color-info-900: #0054a8;
+  --color-info-950: #003870;
+}
+
+/* Global heading styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+
+h1 {
+  font-size: --font-size-2xl;
+}
+h2 {
+  font-size: --font-size-xl;
+}
+h3 {
+  font-size: --font-size-lg;
+}
+h4 {
+  font-size: --font-size-md;
+}
+h5 {
+  font-size: --font-size-sm;
+}
+h6 {
+  font-size: --font-size-xs;
+}
+
+/* Custom focus outline */
+:focus {
+  //outline: 2px solid var(--color-primary-500);
+  //transition: outline 0.1s ease-in-out;
+  outline: 0;
+}
+
+.input-field {
+  @apply w-full p-2 bg-neutral-900 border border-neutral-800 rounded-lg;
+}
+
+@custom-variant hocus (&:hover, &:focus);
+
+.fadescale-enter-active,
+.fadescale-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
+.fadescale-enter-from,
+.fadescale-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
