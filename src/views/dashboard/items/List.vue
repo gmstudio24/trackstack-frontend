@@ -1,11 +1,11 @@
 <template>
   <DashboardLayout title="Items">
-    <SortingBar :columns="columns" :filters="sortingBubbles">
+    <SortingBar @update:sort-by="updateSortBy" @update:limit="updateLimit" :columns="columns" :filters="sortingBubbles">
       <Button class="m-1" :disabled="selectedRows?.length === 0" @click="showModal = true" icon="paper-clip">Wydruk</Button>
       <Button class="m-1" primary icon="plus" :to="'/dashboard/items/new'">New Item</Button>
     </SortingBar>
     <DataTable v-model="selectedRows" :columns="columns" :rows="rows" :actions="actions" selectable />
-    <Pagination :total="2000" :perPage="[10, 50, 100]" /> 
+    <Pagination @paginate="(page: number) => {filters.page = page}" :page="filters.page" :pages="pagination.pages"/> 
   </DashboardLayout>
   <Modal v-if="showModal" title="Wydruk" @close="showModal = false">
     <LocationSelector label="fields.location" v-model="printLocation" />
@@ -24,25 +24,44 @@ import SortingBar from '@/components/datatable/SortingBar.vue';
 import LocationSelector from '@/components/editor/LocationSelector.vue';
 import { useApi } from '@/composables/useApi';
 import { DialogButtonsType, DialogResponse, useDialog } from '@/composables/useDialog';
-import { onMounted, ref } from 'vue';
+import { useModelApi } from '@/composables/useModelApi';
+import { onMounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 const { push } = useRouter()
-const { get } = useApi()
+const { index } = useModelApi('item')
 const { openDialog } = useDialog()
+
+const updateSortBy = (key: string) => {
+  filters.value.sortBy = key
+}
+
+const updateLimit = (key: number) => {
+  
+  filters.value.perPage = key
+  filters.value.page = 1
+}
 
 const columns = ref([
   { key: 'id', label: 'fields.id', meta: true, primary: true, hidden: true },
   { key: 'name', label: 'fields.name' },
   { key: 'description', label: 'fields.description', extendable: true },
-  { key: 'address', label: 'fields.address', value: (o: any) => o.location.address },
+  { key: 'address', label: 'fields.address', value: (o: any) => o.location.address, filterable: false },
+  { key : 'location_id', label: 'fields.location', hidden: true },
   { key: 'created_at', label: 'fields.createdAt', meta: true },
   { key: 'updated_at', label: 'fields.modifiedAt', meta: true },
 ])
 
+const filters = ref({
+  sortBy: 'name',
+  page: 1,
+  perPage: 50,
+  filters: [],
+})
+
 const {post} = useApi();
 
-const rows = ref([]);
+const rows = ref<any[]>([]);
 
 const showModal = ref(false)
 
@@ -59,12 +78,6 @@ const printLocation = ref({
   address: ''
 })
 
-
-  // { id: '8a5104f5-e557-4870-84e3-51e2ee3f6181', created_at: '2023-01-01 14:10:12', updated_at: '2023-01-02 16:52:18', name: 'Item 1', description: 'Description of Item 1' },
-  // { id: 'a339df58-fe88-45b9-838b-ccc5a579c4f5', created_at: '2023-01-03 17:47:42', updated_at: '2023-01-04 08:56:37', name: 'Item 2', description: 'Description of Item 2' },
-  // { id: '41d4b634-4962-4fa4-b3b8-57dbeb3b927d', created_at: '2023-01-05 10:23:04', updated_at: '2023-01-06 13:22:05', name: 'Item 3', description: 'Description of Item 3' }
-
-
 const sortingBubbles = ref([
   { key: 'created_at', label: 'Created At', toggle: (key: string) => { console.log('Toggled sorting bubble for key:', key) } },
   { key: 'updated_at', label: 'Updated At', toggle: (key: string) => { console.log('Toggled sorting bubble for key:', key) }  },
@@ -72,6 +85,29 @@ const sortingBubbles = ref([
   { key: 'description', label: 'Description', toggle: (key: string) => { console.log('Toggled sorting bubble for key:', key) }  }
 ])
 
+watch(filters, (newValue) => {
+  indexData()
+}, {deep: true})
+
+const indexData = async () => {
+  const results = (await index({page: filters.value.page, perPage: filters.value.perPage, sortBy: filters.value.sortBy}));
+  rows.value = results.data
+  pagination.value.page = results.meta.current_page
+  pagination.value.pages = results.meta.last_page
+  selectedRows.value = []
+}
+
+const sorting = ref({
+  sortBy: ''
+})
+
+const pagination = ref<{
+  page: number,
+  pages: number
+}>({
+  page: 1,
+  pages: 1
+})
 
 const actions = [
   {
@@ -100,9 +136,7 @@ const actions = [
 ]
 
 onMounted(() => {
-  get('items').then((response) => {
-    rows.value = response.data
-  })
+  indexData();
 })
 
 const submitDocument = () => {

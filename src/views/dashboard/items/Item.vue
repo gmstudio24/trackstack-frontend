@@ -8,16 +8,16 @@
       :delete="deleteItem"
       :exit="exit"
     >
-      <Card title="Events">
+      <Card :title="$t('common.events')">
         <DataTable
           no-actions
           :columns="[
             {key: 'id', label: 'fields.id', primary: true, hidden: true},
             {key: 'time', label: 'fields.time', date: true},
-            {key: 'type', label: 'fields.type'},
-            {key: 'info', data: (o: any) => o.data.old_location.name, label: 'fields.info'},
+            {key: 'type', value: e=>$t('events.type.'+e.type), label: 'fields.type'},
+            {key: 'location', value: e => e.location.address, label: 'fields.location'},
           ]"
-          :rows="(values ?? {}).events ?? []"
+          :rows="values.events ?? []"
         />
       </Card>
     </ObjectEditor>
@@ -25,7 +25,9 @@
 </template>
 
 <script setup lang="ts">
+import Card from "@/components/blocks/Card.vue";
 import DashboardLayout from "@/components/DashboardLayout.vue";
+import DataTable from "@/components/datatable/DataTable.vue";
 import ObjectEditor from "@/components/editor/ObjectEditor.vue";
 import {useApi} from "@/composables/useApi";
 import {onMounted, readonly, ref} from "vue";

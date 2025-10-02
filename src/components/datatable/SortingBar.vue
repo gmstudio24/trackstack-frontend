@@ -1,19 +1,23 @@
 <template>
-  <div class="flex flex-row items-center">
+  <div class="flex flex-row items-center gap-2">
     <div class="flex-shrink basis-[200px]" v-if="(props.columns?.length ?? 0) > 0">
       <SelectInput
-        disabled
         label="sorting.sortBy"
         :options="props.columns?.map((column) => ({
           value: column.key,
           label: column.label,
-        })) ?? []" />
+        })) ?? []"
+        v-model="sortBy"
+        />
     </div>
-    <div class="ml-4" v-if="(props.filters?.length ?? 0) > 0">
-      <InputWrapper label="sorting.filters">
-        <SortingBubble disabled class="my-2" v-for="filter in props.filters" :value="filter.key" :label="filter.label" @toggle="filter.toggle" />
-      </InputWrapper>
-    </div>
+    <SelectInput
+      label="sorting.limit"
+      :options="props.limits?.map((limit) => ({
+        value: limit,
+        label: limit.toString(),
+      })) ?? []"
+      v-model="limit"
+      />
     <div class="flex-1 text-right mr-2">
       <slot />
     </div>
@@ -21,9 +25,28 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import InputWrapper from '../input/InputWrapper.vue';
 import SelectInput from '../input/SelectInput.vue';
 import SortingBubble from './SortingBubble.vue';
+
+const sortBy = ref('')
+const limit = ref(50)
+
+watch(sortBy, (newValue) => {
+  if(sortBy.value !== '') {
+    emit('update:sortBy', newValue)
+  }
+})
+
+watch(limit, (newValue) => {
+  emit('update:limit', newValue)
+})
+
+const emit = defineEmits<{
+  (e: 'update:sortBy', value: string): void,
+  (e: 'update:limit', value: number): void,
+}>();
 
   const props = defineProps({
     columns: {
@@ -34,6 +57,10 @@ import SortingBubble from './SortingBubble.vue';
         meta?: boolean;
       }>,
       required: false
+    },
+    limits: {
+      type: Array as () => Array<number>,
+      default: () => [2, 4, 25, 50, 100],
     },
     filters: {
       type: Array as () => Array<{

@@ -22,6 +22,7 @@
     "completed": "Zakończono",
     "failed": "Niepowodzenie",
     "noResults": "Brak wyników",
+    "events": "Wydarzenia",
     "set": "Ustaw",
     "exit": "Wyjdź",
     "content": "-",
@@ -63,7 +64,8 @@
   },
   "sorting": {
     "sortBy": "Sortowanie",
-    "filters": "Filtruj"
+    "filters": "Filtruj",
+    "limit": "Ilość wyników"
   },
   "fields": {
     "id": "ID",
@@ -78,6 +80,13 @@
     "city": "Miasto",
     "postal": "Kod pocztowy",
     "country": "Kraj",
-    "address": "Adres"
+    "address": "Adres",
+    "type": "Typ",
+    "time": "Czas"
+  },
+  "events": {
+    "type": {
+      "LOCATION_CHANGE": "Zmiana lokalizacji"
+    }
   }
 }

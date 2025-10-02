@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center m-2">
-    <MiniButton
+    <!-- <MiniButton
       class="size-9 !m-1 bg-neutral-900"
       :class="{
         '!bg-neutral-800 text-neutral-400 pointer-events-none': !leftActive,
@@ -13,20 +13,24 @@
         }
       "
       ><Icon name="chevron-left" class="size-4" />
-    </MiniButton>
+    </MiniButton> -->
+    <MiniButton :disabled="props.page === 1" @click="emit('paginate', 1)" class="size-9 !m-1"><ChevronDoubleLeftIcon class="size-4" /></MiniButton>
+    <MiniButton :disabled="props.page === 1" @click="emit('paginate', props.page - 1)" class="size-9 !m-1"><ChevronLeftIcon class="size-4" /></MiniButton>
     <MiniButton
       class="size-9 !m-1"
-      v-for="button in buttons"
+      v-for="button in pages"
       :class="{
         'bg-primary-600 border-primary-400 text-neutral-200':
-          pageNumber === button.page,
-        'bg-neutral-900 !border-neutral-800 text-neutral-400 pointer-events-none':
-          button.page === null,
+         props.page === button,
+        // 'bg-neutral-900 !border-neutral-800 text-neutral-400 pointer-events-none':
+        //   button.page === null,
       }"
-      @click="button.action"
-      >{{ button.label }}</MiniButton
+      @click="() => { emit('paginate', button) }"
+      >{{ button }}</MiniButton
     >
-    <MiniButton
+    <MiniButton class="size-9 !m-1" :disabled="props.page === props.pages" @click="emit('paginate', props.page + 1)"><ChevronRightIcon /></MiniButton>
+    <MiniButton class="size-9 !m-1" :disabled="props.page === props.pages" @click="emit('paginate', props.pages)"><ChevronDoubleRightIcon /></MiniButton>
+    <!-- <MiniButton
       class="size-9 !m-1 bg-neutral-900"
       :class="{
         '!bg-neutral-800 text-neutral-400 pointer-events-none': !rightActive,
@@ -39,113 +43,46 @@
         }
       "
       ><Icon name="chevron-right" class="size-4"
-    /></MiniButton>
+    /></MiniButton> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import Icon from "../Icon.vue";
-import IconButton from "../buttons/IconButton.vue";
 import MiniButton from "../buttons/MiniButton.vue";
-import SelectInput from "../input/SelectInput.vue";
-import InputWrapper from "../input/InputWrapper.vue";
+import { ChevronLeftIcon, ChevronRightIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from "@heroicons/vue/24/outline";
 
-const props = defineProps({
-  total: {
-    type: Number,
-    required: true,
-  },
-  perPage: {
-    type: Array as () => number[],
-    default: () => [50, 100],
-    required: false,
-  },
-});
+const props = defineProps<{
+  pages: number
+  page: number
+  padding?: number
+}>();
 
-const leftActive = computed(() => pageNumber.value > 1);
+const emit = defineEmits<{
+  (e: 'paginate', value: number): void
+}>();
 
-const rightActive = computed(() => pageNumber.value < pages.value.length);
-
-const pageNumber = ref(1);
-
-const perPage = ref(50);
+const padding = 3;
 
 const pages = computed(() => {
-  const totalPages = Math.ceil(props.total / perPage.value);
-  return Array.from({ length: totalPages }, (_, i) => i + 1);
-});
+  const pg = []
+  const rightPadding = Math.min(padding, props.pages - props.page)
+  const leftPadding = Math.min(padding, props.page - 1)
+  const leftAdd = padding - rightPadding
+  const rightAdd = padding - leftPadding
+  for(let i = 1; i <= props.pages; i++) {
+    console.log(i)
+    if(i < props.page - (padding + leftAdd)) {
+      continue;
+    }
+    if(i > props.page + (padding + rightAdd)) {
+      continue;
 
-const buttons = computed(() => {
-  let pagesResult = [];
-
-  const distance = 3;
-
-  const rightTrim = Math.max(4 - pages.value.length + pageNumber.value, 0);
-  const leftTrim = Math.max(5 - pageNumber.value, 0);
-
-  if (leftTrim < distance - 1) {
-    pagesResult.push({
-      label: "1",
-      page: 1,
-      action: () => {
-        pageNumber.value = 1;
-      },
-    });
+    }
+    pg.push(i)
   }
-  if (leftTrim < distance - 2) {
-    pagesResult.push({
-      label: "...",
-      page: null,
-      action: () => {},
-    });
-  }
-  const leftSide = pages.value.slice(
-    Math.max(0, pageNumber.value - distance - rightTrim),
-    pageNumber.value - 1
-  );
-  const rightSide = pages.value.slice(
-    pageNumber.value,
-    Math.min(pages.value.length, pageNumber.value + distance - 1 + leftTrim)
-  );
-  pagesResult.push(
-    ...leftSide.map((page) => ({
-      label: page.toString(),
-      page,
-      action: () => (pageNumber.value = page),
-    }))
-  );
-  pagesResult.push({
-    label: pageNumber.value.toString(),
-    page: pageNumber.value,
-    action: () => {},
-  });
-  pagesResult.push(
-    ...rightSide.map((page) => ({
-      label: page.toString(),
-      page,
-      action: () => (pageNumber.value = page),
-    }))
-  );
-  if (rightTrim < distance - 2) {
-    pagesResult.push({
-      label: "...",
-      page: null,
-      action: () => {},
-    });
-  }
-  if (rightTrim < distance - 1) {
-    pagesResult.push({
-      label: pages.value.length.toString(),
-      page: pages.value.length,
-      action: () => {
-        pageNumber.value = pages.value.length;
-      },
-    });
-  }
-
-  return pagesResult;
-});
+  return pg
+})
 </script>
 
 <style scoped></style>
