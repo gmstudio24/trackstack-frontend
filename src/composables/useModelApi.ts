@@ -14,18 +14,18 @@ export type IndexOptions = {
   sortBy?: string
 }
 
-export type IndexResponse = {
-  data: object[],
+export type IndexResponse<T = any> = {
+  data: T[],
   meta: PaginationMeta
 }
 
-export const useModelApi = (modelName: string, options: UseModelApiOptions = {}) => {
+export const useModelApi = <T = any>(modelName: string, options: UseModelApiOptions = {}) => {
 
   const modelUrl = options.modelUrl ?? `${modelName}s`;
 
   const {get} = useApi();
 
-  const index = async ({page = 1, perPage = 20, sortBy}: IndexOptions = {}): Promise<IndexResponse> => {
+  const index = async ({page = 1, perPage = 20, sortBy}: IndexOptions = {}): Promise<IndexResponse<T>> => {
     return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy})).then(data => data.data).catch(() => {
       useError('error.cannotIndexModel.' + modelName)
     })

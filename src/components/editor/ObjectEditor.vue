@@ -10,6 +10,7 @@
     v-for="fieldgroup in props.setup?.fieldgroups"
     :key="fieldgroup.name"
     :title="fieldgroup.label"
+    expandable
   >
     <div class="flex gap-2">
       <component

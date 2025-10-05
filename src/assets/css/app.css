@@ -98,6 +98,10 @@ h6 {
   @apply w-full p-2 bg-neutral-900 border border-neutral-800 rounded-lg;
 }
 
+.input-field-disabled {
+  @apply bg-neutral-900/50 border-neutral-800/50 !text-neutral-500;
+}
+
 @custom-variant hocus (&:hover, &:focus);
 
 .fadescale-enter-active,

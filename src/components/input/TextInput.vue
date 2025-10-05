@@ -53,7 +53,7 @@ import InputWrapper from './InputWrapper.vue';
       class="input-field"
       :class="{
         'border-red-800': props.invalid,
-        '!text-neutral-500': props.disabled,
+        'input-field-disabled': props.disabled,
       }"
       :disabled="props.disabled"
       :aria-disabled="props.disabled"
