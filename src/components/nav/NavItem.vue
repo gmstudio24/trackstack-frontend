@@ -3,18 +3,18 @@
     <a
       :href="props.to"
       @click.native.prevent="clicked"
-      :class="{
+      :class="{ 
         '!border-primary-700 !text-primary-500 !bg-primary-900':
-          $route.path.includes(props.to),
+         props.to ? $route.path.includes(props.to) : false,
       }"
-      class="block no-underline text-inherit flex flex-row items-center border-neutral-800 text-neutral-500 p-2 mx-2 my-4 rounded-lg border-1 hover:scale-105 hover:!bg-primary-500 hover:!border-primary-400 hover:!text-primary-100 transition-all"
+      class="block no-underline text-inherit flex flex-row items-center border-neutral-800 text-neutral-500 p-2 mx-2 my-4 rounded-lg border-1 hover:scale-105 hover:!bg-primary-500 hover:!border-primary-400 hover:!text-primary-100 transition-all cursor-pointer"
     >
       <div class="p-2">
         <Icon :name="props.icon" class="size-6" />
       </div>
       <div ref="navItem">
         <div v-if="props.expanded" class="text-md font-bold mx-4">
-          {{ props.label }}
+          {{ $t(props.label) }}
         </div>
       </div>
     </a>
@@ -38,7 +38,7 @@ const emit = defineEmits(["click"]);
 const props = defineProps({
   to: {
     type: String,
-    required: true,
+    required: false,
   },
   icon: {
     type: String,
@@ -59,7 +59,6 @@ const { openDialog } = useDialog();
 const { push } = useRouter();
 
 const clicked = () => {
-  console.log("clicked");
   if (isLocked()) {
     openDialog(
       "Are you sure?",
@@ -67,13 +66,13 @@ const clicked = () => {
       DialogButtonsType.YES_NO
     ).then((response) => {
       if (response === DialogResponse.YES) {
-        push(props.to);
+        if(props.to) push(props.to);
         emit("click");
         unlock();
       }
     });
   } else {
-    push(props.to);
+    if(props.to)push(props.to);
     emit("click");
   }
 };

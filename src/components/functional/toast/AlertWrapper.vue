@@ -7,7 +7,7 @@
       :type="alert.type ?? 'info'"
       @close="closeAlert(alert)"
       :key="index"
-      >{{ alert.message }}</Alert
+      >{{ $t(alert.message) }}</Alert
     >
   </Toast>
 </template>

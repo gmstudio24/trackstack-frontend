@@ -1,5 +1,4 @@
 import { PaginationMeta } from "@/types/PaginationMeta"
-import { useAlert } from "./useAlert"
 import { useApi } from "./useApi"
 import { useError } from "./useError"
 import { buildHttpQueryParams } from "@/utils/httpbuiler"
@@ -23,7 +22,7 @@ export const useModelApi = <T = any>(modelName: string, options: UseModelApiOpti
 
   const modelUrl = options.modelUrl ?? `${modelName}s`;
 
-  const {get} = useApi();
+  const {get, patch, del, post} = useApi();
 
   const index = async ({page = 1, perPage = 20, sortBy}: IndexOptions = {}): Promise<IndexResponse<T>> => {
     return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy})).then(data => data.data).catch(() => {
@@ -31,5 +30,29 @@ export const useModelApi = <T = any>(modelName: string, options: UseModelApiOpti
     })
   }
 
-  return {index}
+  const createModel = async (data: T): Promise<T> => {
+    return post(modelUrl, data).then(data => data.data).catch(() => {
+      useError('error.cannotCreateModel.' + modelName)
+    })
+  }
+
+  const getModel = async (id: string): Promise<T> => {
+    return get(`${modelUrl}/${id}`).then(data => data.data).catch(() => {
+      useError('error.cannotGetModel.' + modelName)
+    })
+  }
+
+  const updateModel = async (id: string, data: T): Promise<T> => {
+    return patch(`${modelUrl}/${id}`, data).then(data => data.data).catch(() => {
+      useError('error.cannotUpdateModel.' + modelName)
+    })
+  }
+
+  const deleteModel = async (id: string): Promise<void> => {
+    return del(`${modelUrl}/${id}`).then(data => data.data).catch(() => {
+      useError('error.cannotDeleteModel.' + modelName)
+    })
+  }
+
+  return {index, createModel, getModel, updateModel, deleteModel}
 }

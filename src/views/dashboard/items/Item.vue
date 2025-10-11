@@ -3,6 +3,7 @@
     <ObjectEditor
       route-back="/dashboard/items"
       v-model="values"
+      :is-new="!existing"
       :setup="editorSetup"
       :save="save"
       :delete="deleteItem"
@@ -30,10 +31,15 @@ import DashboardLayout from "@/components/DashboardLayout.vue";
 import DataTable from "@/components/datatable/DataTable.vue";
 import ObjectEditor from "@/components/editor/ObjectEditor.vue";
 import {useApi} from "@/composables/useApi";
-import {onMounted, readonly, ref} from "vue";
+import { useModelApi } from "@/composables/useModelApi";
+import {computed, onMounted, readonly, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
-const {get, patch, put, post} = useApi();
+const {get, patch, put, post, del} = useApi();
+
+const {createModel, getModel, updateModel, deleteModel} = useModelApi('item')
+
+const modelId = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
 
 const route = useRoute();
 
@@ -42,11 +48,11 @@ const {push} = useRouter();
 const existing = ref(route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
-  return patch("items/" + route.params.id, values.value);
+  return updateModel(modelId.value, values.value);
 };
 
 const makeCreateRequest = async () => {
-  return post("items", values.value);
+  return createModel(values.value)
 };
 
 const save = () => {
@@ -64,11 +70,10 @@ const save = () => {
 };
 
 const deleteItem = () => {
-  console.log("delete");
+  return deleteModel(modelId.value)
 };
 
 const exit = () => {
-  console.log("exit");
 };
 
 const values = ref<Record<string, any>>({});

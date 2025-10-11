@@ -3,33 +3,57 @@
     <ObjectEditor
       route-back="/dashboard/locations"
       v-model="values"
+      :is-new="!existing"
       :setup="editorSetup"
       :save="save"
       :delete="deleteItem"
       :exit="exit"
-    />
+    >
+      <Card :title="$t('common.items')">
+        <DataTable
+          :actions="itemsActions"
+          :columns="itemsColumns"
+          :rows="values.items"
+        />
+      </Card>
+    </ObjectEditor>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
+import Card from "@/components/blocks/Card.vue";
 import DashboardLayout from "@/components/DashboardLayout.vue";
+import DataTable from "@/components/datatable/DataTable.vue";
 import ObjectEditor from "@/components/editor/ObjectEditor.vue";
 import {useApi} from "@/composables/useApi";
-import {onMounted, readonly, ref} from "vue";
+import {
+  DialogButtonsType,
+  DialogResponse,
+  useDialog,
+} from "@/composables/useDialog";
+import { useEditor } from "@/composables/useEditor";
+import { useModelApi } from "@/composables/useModelApi";
+import {useSafeLock} from "@/composables/useSafeLock";
+import {computed, onMounted, readonly, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
+const {safeExit} = useEditor();
+
+const {createModel, getModel, updateModel, deleteModel} = useModelApi('item')
 const {get, patch, del, post} = useApi();
 
+const modelId = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
+
 const route = useRoute();
-const {push} = useRouter()
+const {push} = useRouter();
 const existing = ref(route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
-  return patch("locations/" + route.params.id, values.value);
+  return updateModel(modelId.value, values.value);
 };
 
 const makeCreateRequest = async () => {
-  return post("locations", values.value);
+  return createModel(values.value)
 };
 
 const save = () => {
@@ -37,8 +61,8 @@ const save = () => {
     (route.params.id ? makeSaveRequest() : makeCreateRequest())
       .then((r) => {
         resolve(r.data);
-        push('/dashboard/locations/' + r.data.id)
-        values.value = r.data
+        push("/dashboard/locations/" + r.data.id);
+        values.value = r.data;
       })
       .catch((error) => {
         reject(error);
@@ -47,20 +71,17 @@ const save = () => {
 };
 
 const deleteItem = () => {
-  del('locations/' + route.params.id).then(() => {
-    push('/dashboard/locations')
-  })
+  return deleteModel(modelId.value)
 };
 
 const exit = () => {
-  console.log("exit");
 };
 
 const editorSetup = {
   fieldgroups: [
     {
       name: "meta",
-      label: "Meta",
+      label: "common.meta",
       fields: [
         {name: "id", label: "ID", type: "text", readonly: true},
         {
@@ -79,7 +100,7 @@ const editorSetup = {
     },
     {
       name: "address",
-      label: "Address",
+      label: "fields.address",
       fields: [
         {name: "name", label: "fields.name", type: "text"},
         {name: "street", label: "fields.street", type: "text"},
@@ -91,16 +112,36 @@ const editorSetup = {
     },
     {
       name: "position",
-      label: "Geoloc",
+      label: "fields.geolocation",
+      description: "common.wipFeature",
       fields: [
-        {name: "lat", label: "fields.latitude", type: "text"},
-        {name: "lng", label: "fields.longitude", type: "text"},
+        {name: "lat", label: "fields.latitude", type: "text", readonly: true},
+        {name: "lng", label: "fields.longitude", type: "text", readonly: true},
       ],
-    }
+    },
   ],
 };
 
-const values = ref({});
+const itemsColumns = ref([
+  {key: "id", label: "fields.id", meta: true, primary: true, hidden: true},
+  {key: "name", label: "fields.name"},
+  {key: "description", label: "fields.description", extendable: true},
+  {key: "since", label: "fields.since", date: true},
+]);
+
+const values = ref<Record<string, any>>({});
+
+const itemsActions = ref<Array<any>>([
+  {
+    label: "common.open",
+    icon: "pencil",
+    action: (row: any) => {
+      safeExit().then((canExit) => {
+        if (canExit) push("/dashboard/items/" + row);
+      });
+    },
+  },
+]);
 
 onMounted(() => {
   get("locations/" + route.params.id + "/").then((response) => {

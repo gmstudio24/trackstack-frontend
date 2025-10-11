@@ -4,7 +4,7 @@
       >{{ $t('common.save') }}</Button
     >
     <Button class="m-1" icon="x-mark" @click="exitCall">{{$t('common.exit')}}</Button>
-    <Button class="m-1" icon="trash" @click="deleteCall">{{ $t('common.delete') }}</Button>
+    <Button v-if="!props.isNew" class="m-1" icon="trash" @click="deleteCall">{{ $t('common.delete') }}</Button>
   </Card>
   <Card
     v-for="fieldgroup in props.setup?.fieldgroups"
@@ -12,6 +12,7 @@
     :title="fieldgroup.label"
     expandable
   >
+    <div v-if="fieldgroup.description" class="ml-1 text-sm text-neutral-500">{{ $t(fieldgroup.description) }}</div>
     <div class="flex gap-2">
       <component
         :is="inputMap[field.type] ?? TextInput"
@@ -44,8 +45,14 @@ import {useSafeLock} from "@/composables/useSafeLock";
 import {useRouter} from "vue-router";
 import LocationSelector from "./LocationSelector.vue";
 import DataTable from "../datatable/DataTable.vue";
+import { useEditor } from "@/composables/useEditor";
+import { useAlert } from "@/composables/useAlert";
+
+const {safeExit} = useEditor();
 
 const {openDialog} = useDialog();
+
+const {add} = useAlert()
 
 const {lock, unlock, isLocked} = useSafeLock();
 
@@ -64,10 +71,11 @@ const saveCall = () => {
     props
       .save()
       .then((res: any) => {
+        add({type: 'success', message: 'common.saved', title: 'common.success'})
         unlock();
       })
       .catch(() => {
-        console.log("Cannot save");
+        add({type: 'error', message: 'common.cannotSave', title: 'common.error'})
       });
 };
 
@@ -76,46 +84,29 @@ const onValueChange = (value: any) => {
 };
 
 const exitCall = () => {
-  const makeExit = () => {
-    unlock();
-    goBack();
-  };
-
-  if (!isLocked()) {
-    makeExit();
-    return;
-  }
-
-  openDialog(
-    "Are you sure?",
-    "It will discard all of the changes.",
-    DialogButtonsType.YES_NO
-  ).then((response) => {
-    switch (response) {
-      case DialogResponse.YES:
-        if (props.exit) props.exit();
-        makeExit();
-        break;
-      case DialogResponse.NO:
-        break;
+  safeExit().then((canExit) => {
+    if (canExit) {
+      if (props.exit) props.exit();
+      goBack();
     }
-  });
+  })
 };
 
 const deleteCall = () => {
   openDialog(
-    "Are you sure?",
-    "It will delete the item.",
+    'common.delete',
+    'common.deleteConfirm',
     DialogButtonsType.YES_NO
   ).then((response) => {
-    switch (response) {
-      case DialogResponse.YES:
-        if (props.delete) props.delete();
+    if(response === DialogResponse.YES) {
+      if (props.delete) props.delete().then((res: any) => {
+        add({type: 'success', message: 'common.deleted', title: 'common.success'})
         unlock();
         goBack();
-        break;
-      case DialogResponse.NO:
-        break;
+      }).catch(() => {
+        add({type: 'error', message: 'common.cannotDelete', title: 'common.error'})
+      });
+      
     }
   });
 };
@@ -135,6 +126,7 @@ type editorSetup = {
   fieldgroups: Array<{
     name: string;
     label: string;
+    description?: string;
     fields: Array<{
       name: string;
       label: string;
@@ -144,24 +136,14 @@ type editorSetup = {
     }>;
   }>;
 };
-const props = defineProps({
-  setup: {
-    type: Object,
-  },
-  exit: {
-    type: Function,
-  },
-  save: {
-    type: Function,
-  },
-  delete: {
-    type: Function,
-  },
-  routeBack: {
-    type: String,
-    default: "",
-  },
-});
+const props = defineProps<{
+  setup: editorSetup,
+  isNew: boolean,
+  exit?: () => void,
+  save?: () => Promise<any>,
+  delete?: () => Promise<any>,
+  routeBack?: string
+}>();
 </script>
 
 <style scoped></style>

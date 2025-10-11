@@ -1,6 +1,6 @@
 <template>
   <div @click="close" class="p-4 px-6 rounded-xl border-1 backdrop-blur cursor-pointer transition mt-2" :class="colorScheme[props.type]">
-    <h4 class="mb-1">{{ props.title }}</h4>
+    <h4 class="mb-1">{{ $t(props.title) }}</h4>
     <p><slot></slot></p>
   </div>
 </template>

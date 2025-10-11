@@ -25,14 +25,28 @@
     "events": "Wydarzenia",
     "set": "Ustaw",
     "exit": "Wyjdź",
+    "success": "Sukces",
+    "error": "Błąd",
+    "saved": "Zapisano",
+    "deleted": "Usunięto",
+    "cannotSave": "Nie można zapisać",
+    "cannotDelete": "Nie można usunąć",
+    "exitConfirm": "Nie wszystkie zmiany zostały zapisane. Czy na pewno chcesz wyjść?",
+    "deleteConfirm": "Czy na pewno chcesz usunąć element?",
     "content": "-",
     "meta": "Metadane",
+    "items": "Przedmioty",
+    "open": "Otwórz",
+    "print": "Drukuj",
+    "logout": "Wyloguj",
+    "login": "Zaloguj",
     "status": {
       "success": "Sukces",
       "failed": "Niepowodzenie",
       "pending": "Oczekuje",
       "unknown": "Nieznany"
-    }
+    },
+    "wipFeature": "Ta funkcja jest w trakcie rozwoju"
   },
   "auth": {
     "login": "Zaloguj",
@@ -68,6 +82,8 @@
     "limit": "Ilość wyników"
   },
   "fields": {
+    "geolocation": "Lokalizacja",
+    "since": "Od",
     "id": "ID",
     "name": "Nazwa",
     "createdAt": "Utworzono",
@@ -83,6 +99,26 @@
     "address": "Adres",
     "type": "Typ",
     "time": "Czas"
+  },
+  "pages": {
+    "overview": {
+      "menu": "Przegląd"
+    },
+    "location": {
+      "menu": "Lokalizacje",
+      "search": {
+        "title": "Lokalizacje"
+      }
+    },
+    "item": {
+      "menu": "Przedmioty",
+      "search": {
+        "title": "Przedmioty"
+      }
+    },
+    "settings": {
+      "menu": "Ustawienia"
+    }
   },
   "events": {
     "type": {
