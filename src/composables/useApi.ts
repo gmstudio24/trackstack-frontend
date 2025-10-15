@@ -1,7 +1,7 @@
 import axios from "axios";
 import {ref} from "vue";
 
-const baseUrl = ref("http://trackstack.test/");
+const baseUrl = ref(import.meta.env.VITE_API_URL);
 
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
