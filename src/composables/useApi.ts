@@ -2,7 +2,6 @@ import axios from "axios";
 import {ref} from "vue";
 
 const baseUrl = ref("http://trackstack.test/");
-const authenticated = ref(false);
 
 axios.defaults.withCredentials = true;
 axios.defaults.withXSRFToken = true;
@@ -47,18 +46,6 @@ export function useApi(newBaseUrl?: string) {
     return axios.delete(getFullUrl(url));
   };
 
-  const auth = ({password, email}: {password: string; email: string}) => {
-    return post("login", {email, password}).then(() => {
-      authenticated.value = true;
-    });
-  };
-
-  const unauth = () => {
-    return post("logout", {}).then(() => {
-      authenticated.value = false;
-    });
-  };
-
   return {
     post,
     get,
@@ -66,8 +53,5 @@ export function useApi(newBaseUrl?: string) {
     put,
     del,
     getCsrfToken,
-    auth,
-    unauth,
-    authenticated,
   };
 }

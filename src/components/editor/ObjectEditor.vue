@@ -11,6 +11,7 @@
     :key="fieldgroup.name"
     :title="fieldgroup.label"
     expandable
+    :expanded="fieldgroup.expanded"
   >
     <div v-if="fieldgroup.description" class="ml-1 text-sm text-neutral-500">{{ $t(fieldgroup.description) }}</div>
     <div class="flex gap-2">
@@ -72,11 +73,11 @@ const saveCall = () => {
       .save()
       .then((res: any) => {
         add({type: 'success', message: 'common.saved', title: 'common.success'})
+        console.log(res)
+        values.value = res
+        if(props.baseRoute && res.id) push(props.baseRoute + '/' + res.id)
         unlock();
       })
-      .catch(() => {
-        add({type: 'error', message: 'common.cannotSave', title: 'common.error'})
-      });
 };
 
 const onValueChange = (value: any) => {
@@ -127,6 +128,7 @@ type editorSetup = {
     name: string;
     label: string;
     description?: string;
+    expanded?: boolean;
     fields: Array<{
       name: string;
       label: string;
@@ -142,7 +144,8 @@ const props = defineProps<{
   exit?: () => void,
   save?: () => Promise<any>,
   delete?: () => Promise<any>,
-  routeBack?: string
+  routeBack?: string,
+  baseRoute?: string
 }>();
 </script>
 

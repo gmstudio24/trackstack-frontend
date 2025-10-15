@@ -25,12 +25,13 @@ import PrimaryButton from '../components/buttons/Button.vue';
 import { useApi } from '@/composables/useApi';
 import { useAlert } from '@/composables/useAlert';
 import { useRouter } from 'vue-router';
+import { useAuth } from '@/composables/auth/useAuth';
 const email = ref('');
 const password = ref('');
 
 const version = __APP_VERSION__;
 
-const {auth} = useApi();
+const {auth} = useAuth();
 
 const router = useRouter();
 

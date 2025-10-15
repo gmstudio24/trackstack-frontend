@@ -34,8 +34,8 @@
     "exitConfirm": "Nie wszystkie zmiany zostały zapisane. Czy na pewno chcesz wyjść?",
     "deleteConfirm": "Czy na pewno chcesz usunąć element?",
     "content": "-",
-    "meta": "Metadane",
-    "items": "Przedmioty",
+    "meta": "Informacje",
+    "items": "Stojaki",
     "open": "Otwórz",
     "print": "Drukuj",
     "logout": "Wyloguj",
@@ -86,8 +86,8 @@
     "since": "Od",
     "id": "ID",
     "name": "Nazwa",
-    "createdAt": "Utworzono",
-    "modifiedAt": "Zmodyfikowano",
+    "createdAt": "Utworzone",
+    "modifiedAt": "Ostat. modyfikacja",
     "description": "Opis",
     "location": "Lokalizacja",
     "baseLocation": "Lokalizacja bazowa",
@@ -108,12 +108,24 @@
       "menu": "Lokalizacje",
       "search": {
         "title": "Lokalizacje"
+      },
+      "edit": {
+        "title": "Edytuj lokalizację"
+      },
+      "new": {
+        "title": "Nowa lokalizacja"
       }
     },
     "item": {
-      "menu": "Przedmioty",
+      "menu": "Stojaki",
       "search": {
-        "title": "Przedmioty"
+        "title": "Stojaki"
+      },
+      "edit": {
+        "title": "Edytuj stojak"
+      },
+      "new": {
+        "title": "Nowy stojak"
       }
     },
     "settings": {

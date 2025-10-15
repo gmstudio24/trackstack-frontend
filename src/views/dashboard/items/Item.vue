@@ -1,5 +1,5 @@
 <template>
-  <DashboardLayout :title="existing ? 'Edycja' : 'Nowy element'">
+  <DashboardLayout :title="existing ? $t('pages.item.edit.title') : $t('pages.item.new.title')">
     <ObjectEditor
       route-back="/dashboard/items"
       v-model="values"
@@ -8,6 +8,7 @@
       :save="save"
       :delete="deleteItem"
       :exit="exit"
+      base-route="/dashboard/items"
     >
       <Card :title="$t('common.events')">
         <DataTable
@@ -55,19 +56,7 @@ const makeCreateRequest = async () => {
   return createModel(values.value)
 };
 
-const save = () => {
-  return new Promise<void | Object>((resolve, reject) => {
-    (route.params.id ? makeSaveRequest() : makeCreateRequest())
-      .then((r) => {
-        resolve(r.data);
-        push("/dashboard/items/" + r.data.id);
-        values.value = r.data;
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
+const save = () => route.params.id ? makeSaveRequest() : makeCreateRequest();
 
 const deleteItem = () => {
   return deleteModel(modelId.value)

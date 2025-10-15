@@ -12,7 +12,7 @@
       </h2>
     </div>
     <Transition name="fadescale"
-      ><div v-if="expand">
+      ><div class="mt-1" v-if="expand">
         <slot /></div
     ></Transition>
   </div>
@@ -30,6 +30,10 @@ const props = defineProps({
   expandable: {
     type: Boolean,
     default: false,
+  },
+  expanded: {
+    type: Boolean,
+    default: true,
   }
 });
 
@@ -39,7 +43,7 @@ const expandToggle = () => {
   expand.value = !expand.value;
 };
 
-const expand = ref(true);
+const expand = ref(props.expanded);
 </script>
 
 <style scoped></style>

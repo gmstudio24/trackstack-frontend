@@ -24,34 +24,31 @@ export const useModelApi = <T = any>(modelName: string, options: UseModelApiOpti
 
   const {get, patch, del, post} = useApi();
 
+  const handleApiError = (e: any) => {
+    const errors = e.response.data.errors;
+    Object.keys(errors).forEach(key => {
+      useError(errors[key][0])
+    })
+  }
+
   const index = async ({page = 1, perPage = 20, sortBy}: IndexOptions = {}): Promise<IndexResponse<T>> => {
-    return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy})).then(data => data.data).catch(() => {
-      useError('error.cannotIndexModel.' + modelName)
-    })
+    return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy})).then(data => data.data).catch(handleApiError)
   }
 
-  const createModel = async (data: T): Promise<T> => {
-    return post(modelUrl, data).then(data => data.data).catch(() => {
-      useError('error.cannotCreateModel.' + modelName)
-    })
+  const createModel = async (data: T): Promise<any> => {
+    return post(modelUrl, data).then(data => data.data).catch(handleApiError)
   }
 
-  const getModel = async (id: string): Promise<T> => {
-    return get(`${modelUrl}/${id}`).then(data => data.data).catch(() => {
-      useError('error.cannotGetModel.' + modelName)
-    })
+  const getModel = async (id: string): Promise<any> => {
+    return get(`${modelUrl}/${id}`).then(data => data.data).catch(handleApiError)
   }
 
-  const updateModel = async (id: string, data: T): Promise<T> => {
-    return patch(`${modelUrl}/${id}`, data).then(data => data.data).catch(() => {
-      useError('error.cannotUpdateModel.' + modelName)
-    })
+  const updateModel = async (id: string, data: T): Promise<any> => {
+    return patch(`${modelUrl}/${id}`, data).then(data => data.data).catch(handleApiError)
   }
 
   const deleteModel = async (id: string): Promise<void> => {
-    return del(`${modelUrl}/${id}`).then(data => data.data).catch(() => {
-      useError('error.cannotDeleteModel.' + modelName)
-    })
+    return del(`${modelUrl}/${id}`).then(data => data.data).catch(handleApiError)
   }
 
   return {index, createModel, getModel, updateModel, deleteModel}

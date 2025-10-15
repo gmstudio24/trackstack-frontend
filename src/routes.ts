@@ -8,10 +8,12 @@ import Settings from '@/views/dashboard/Settings.vue';
 import Item from './views/dashboard/items/Item.vue';
 import Locations from './views/dashboard/locations/List.vue';
 import LocationsItem from './views/dashboard/locations/Item.vue';
+import Scanner from './views/Scanner.vue';
 
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
+  {path: '/scanner/:id', component: Scanner},
   {path: '/dashboard', component: Dashboard, children: [
     {path: '', redirect: '/dashboard/overview'},
     {path: 'overview', component: Overview},

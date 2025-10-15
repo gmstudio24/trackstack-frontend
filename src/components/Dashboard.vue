@@ -8,17 +8,20 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { nextTick, onBeforeMount, onMounted, watch } from 'vue';
 import MainNav from './nav/MainNav.vue';
-import NavItem from './nav/NavItem.vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useApi } from '@/composables/useApi';
+import { useRouter } from 'vue-router';
+import { useAuth } from '@/composables/auth/useAuth';
 
-const {authenticated} = useApi()
+const {isAuthenticated} = useAuth()
 const router = useRouter();
 
 onBeforeMount(() => {
-  if(!authenticated.value) router.push('/login')
+  nextTick(() => {
+if(!isAuthenticated.value) {
+    router.push('/login') 
+  }
+  })
 })
 
 const props = defineProps<{

@@ -3,10 +3,7 @@
     <div class="flex-shrink basis-[200px]" v-if="(props.columns?.length ?? 0) > 0">
       <SelectInput
         label="sorting.sortBy"
-        :options="props.columns?.map((column) => ({
-          value: column.key,
-          label: column.label,
-        })) ?? []"
+        :options="sortingOptions"
         v-model="sortBy"
         />
     </div>
@@ -55,6 +52,7 @@ const emit = defineEmits<{
         label: string;
         primary?: boolean;
         meta?: boolean;
+        filterable?: boolean;
       }>,
       required: false
     },
@@ -71,6 +69,11 @@ const emit = defineEmits<{
       required: false
     },
   })
+
+  const sortingOptions = ref(props.columns?.filter((column) => column?.filterable ?? true).map((column) => ({
+          value: column.key,
+          label: column.label,
+        })) ?? [])
 </script>
 
 <style scoped>

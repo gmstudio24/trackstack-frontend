@@ -16,6 +16,9 @@
                 :expanded="expanded"
             />
         </div>
+        <div class="text-center text-xs text-neutral-400">
+          <span>v{{ version }}</span>
+        </div>
         <div>
           <NavItem
             @click="logout"
@@ -23,6 +26,7 @@
             label="common.logout" 
             :expanded="expanded" />
         </div>
+        
     </nav>
 </template>
 
@@ -34,9 +38,12 @@ import IconButton from "@/components/buttons/IconButton.vue";
 import { Bars3Icon } from "@heroicons/vue/24/outline";
 import { useApi } from "@/composables/useApi";
 import { useRouter } from "vue-router";
+import { useAuth } from "@/composables/auth/useAuth";
+
+const version = __APP_VERSION__;
 
 
-const {unauth} = useApi();
+const {unauth} = useAuth();
 const router = useRouter();
 
 const logout = () => {

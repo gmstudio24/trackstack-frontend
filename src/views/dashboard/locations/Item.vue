@@ -1,5 +1,5 @@
 <template>
-  <DashboardLayout :title="existing ? 'Edit item' : 'New Item'">
+  <DashboardLayout :title="existing ? $t('pages.location.edit.title') : $t('pages.location.new.title')">
     <ObjectEditor
       route-back="/dashboard/locations"
       v-model="values"
@@ -8,6 +8,7 @@
       :save="save"
       :delete="deleteItem"
       :exit="exit"
+      base-route="/dashboard/locations"
     >
       <Card :title="$t('common.items')">
         <DataTable
@@ -39,7 +40,7 @@ import {useRoute, useRouter} from "vue-router";
 
 const {safeExit} = useEditor();
 
-const {createModel, getModel, updateModel, deleteModel} = useModelApi('item')
+const {createModel, getModel, updateModel, deleteModel} = useModelApi('location')
 const {get, patch, del, post} = useApi();
 
 const modelId = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
@@ -49,26 +50,14 @@ const {push} = useRouter();
 const existing = ref(route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
-  return updateModel(modelId.value, values.value);
+  return updateModel(modelId.value, values.value)
 };
 
 const makeCreateRequest = async () => {
   return createModel(values.value)
 };
 
-const save = () => {
-  return new Promise<Object>((resolve, reject) => {
-    (route.params.id ? makeSaveRequest() : makeCreateRequest())
-      .then((r) => {
-        resolve(r.data);
-        push("/dashboard/locations/" + r.data.id);
-        values.value = r.data;
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
+const save = async () => route.params.id ? makeSaveRequest() : makeCreateRequest();
 
 const deleteItem = () => {
   return deleteModel(modelId.value)
@@ -86,13 +75,13 @@ const editorSetup = {
         {name: "id", label: "ID", type: "text", readonly: true},
         {
           name: "created_at",
-          label: "Created At",
+          label: "fields.createdAt",
           type: "date",
           readonly: true,
         },
         {
           name: "updated_at",
-          label: "Updated At",
+          label: "fields.modifiedAt",
           type: "date",
           readonly: true,
         },
@@ -114,6 +103,7 @@ const editorSetup = {
       name: "position",
       label: "fields.geolocation",
       description: "common.wipFeature",
+      expanded: false,
       fields: [
         {name: "lat", label: "fields.latitude", type: "text", readonly: true},
         {name: "lng", label: "fields.longitude", type: "text", readonly: true},
