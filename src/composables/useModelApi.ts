@@ -11,6 +11,7 @@ export type IndexOptions = {
   page?: number,
   perPage?: number,
   sortBy?: string
+  direction?: string
 }
 
 export type IndexResponse<T = any> = {
@@ -29,10 +30,11 @@ export const useModelApi = <T = any>(modelName: string, options: UseModelApiOpti
     Object.keys(errors).forEach(key => {
       useError(errors[key][0])
     })
+    return Promise.reject(e)
   }
 
-  const index = async ({page = 1, perPage = 20, sortBy}: IndexOptions = {}): Promise<IndexResponse<T>> => {
-    return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy})).then(data => data.data).catch(handleApiError)
+  const index = async ({page = 1, perPage = 20, sortBy, direction}: IndexOptions = {}): Promise<IndexResponse<T>> => {
+    return get(modelUrl + buildHttpQueryParams({page, per_page: perPage, sort_by: sortBy, sort_direction: direction})).then(data => data.data).catch(handleApiError)
   }
 
   const createModel = async (data: T): Promise<any> => {

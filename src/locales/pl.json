@@ -78,8 +78,11 @@
   },
   "sorting": {
     "sortBy": "Sortowanie",
+    "sortDirection": "Kierunek",
     "filters": "Filtruj",
-    "limit": "Ilość wyników"
+    "limit": "Ilość wyników",
+    "asc": "Rosnąco",
+    "desc": "Malejąco"
   },
   "fields": {
     "geolocation": "Lokalizacja",

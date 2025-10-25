@@ -38,26 +38,6 @@ const {settings, data} = useModelSearch({
           push("/dashboard/locations/" + row);
         },
       },
-      {
-        label: "common.delete",
-        icon: "trash",
-        action: (row: any) => {
-          openDialog(
-            "dashboard.editor.confirmDelete",
-            "dashboard.editor.confirmDeleteMessage",
-            DialogButtonsType.YES_NO
-          ).then((response) => {
-            switch (response) {
-              case DialogResponse.YES:
-                // deleteItem(row);
-                console.log("Delete action for row:", row);
-                break;
-              case DialogResponse.NO:
-                break;
-            }
-          });
-        },
-      },
     ],
   },
   actions: [
@@ -78,22 +58,6 @@ const {settings, data} = useModelSearch({
 watch(data.table.data, (newData) => {
   console.log('Data changed', newData)
 })
-
-// const updateItems = () => {
-//   get("locations").then((response) => {
-//     rows.value = response.data;
-//   });
-// };
-
-// const deleteItem = (id: string) => {
-//   del("locations/" + id).then(() => {
-//     updateItems();
-//   });
-// };
-
-// onMounted(() => {
-//   updateItems();
-// });
 </script>
 
 <style scoped></style>

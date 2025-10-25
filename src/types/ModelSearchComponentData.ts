@@ -7,6 +7,7 @@ export type ModelSearchComponentData<T = any> = {
   },
   filters: {
     sortBy: string
+    direction: string
   }
   pagination: {
     page: number

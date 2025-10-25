@@ -20,7 +20,7 @@
         title="Select location"
       >
         <div>
-          <TextInput @change="update" class="w-128" label="Wyszukaj" v-model="query"/>
+          <TextInput @input="registerChange" class="w-full min-w-128" label="Wyszukaj" v-model="query"/>
         </div>
         <div>
           <DataTable
@@ -48,16 +48,28 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import Modal from "../blocks/Modal.vue";
 import InputWrapper from "../input/InputWrapper.vue";
 import TextInput from "../input/TextInput.vue";
 import DataTable from "../datatable/DataTable.vue";
 import { useApi } from "@/composables/useApi";
+import { useInputUpdate } from "@/composables/input/useInputUpdate";
+import { buildHttpQueryParams } from "@/utils/httpbuiler";
 
 const modalOpen = ref(false);
 
 const {get} = useApi();
+
+const {registerChange, onChange} = useInputUpdate(300);
+
+onChange(() => {
+  update()
+})
+
+onMounted(() => {
+  update()
+})
 
 const props = defineProps({
   label: {
@@ -107,8 +119,8 @@ const model = defineModel<{
 } | undefined>(undefined)
 
 const update = () => {
-  get('locations/search/' + query.value).then((response) => {
-    rows.value = response.data
+  get('locations/search' + buildHttpQueryParams({query: query.value})).then((response) => {
+    rows.value = response.data.data
   })
 }
 </script>

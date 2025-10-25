@@ -62,6 +62,10 @@
   --color-info-950: #003870;
 }
 
+html, body {
+  background-color: var(--color-neutral-950);
+}
+
 /* Global heading styles */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);

@@ -49,26 +49,6 @@ const {settings, data} = useModelSearch({
           push("/dashboard/items/" + row);
         },
       },
-      {
-        label: "common.delete",
-        icon: "trash",
-        action: (row: any) => {
-          openDialog(
-            "dashboard.editor.confirmDelete",
-            "dashboard.editor.confirmDeleteMessage",
-            DialogButtonsType.YES_NO
-          ).then((response) => {
-            switch (response) {
-              case DialogResponse.YES:
-                console.log("Delete action for row:", row);
-                break;
-              case DialogResponse.NO:
-                break;
-            }
-          });
-          console.log("Delete action for row:", row);
-        },
-      },
     ],
   },
   actions: [

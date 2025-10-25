@@ -7,10 +7,17 @@
         v-model="sortBy"
         />
     </div>
+    <div>
+      <SelectInput
+        label="sorting.sortDirection"
+        :options="sortingDirections"
+        v-model="sortDirection"
+        />
+    </div>
     <SelectInput
       label="sorting.limit"
       :options="props.limits?.map((limit) => ({
-        value: limit,
+        value: limit.toString(),
         label: limit.toString(),
       })) ?? []"
       v-model="limit"
@@ -28,20 +35,26 @@ import SelectInput from '../input/SelectInput.vue';
 import SortingBubble from './SortingBubble.vue';
 
 const sortBy = ref('')
+const sortDirection = ref('asc')
 const limit = ref(50)
 
-watch(sortBy, (newValue) => {
+const sortingDirections = ref([
+  {value: 'asc', label: 'sorting.asc'},
+  {value: 'desc', label: 'sorting.desc'},
+])
+
+watch(() => ({by: sortBy.value, direction: sortDirection.value}), (newValue) => {
   if(sortBy.value !== '') {
     emit('update:sortBy', newValue)
   }
-})
+}, {deep: true})
 
 watch(limit, (newValue) => {
   emit('update:limit', newValue)
 })
 
 const emit = defineEmits<{
-  (e: 'update:sortBy', value: string): void,
+  (e: 'update:sortBy', value: {by: string, direction: string}): void,
   (e: 'update:limit', value: number): void,
 }>();
 
@@ -58,7 +71,7 @@ const emit = defineEmits<{
     },
     limits: {
       type: Array as () => Array<number>,
-      default: () => [2, 4, 25, 50, 100],
+      default: () => [25, 50, 100],
     },
     filters: {
       type: Array as () => Array<{

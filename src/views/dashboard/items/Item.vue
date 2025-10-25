@@ -46,7 +46,7 @@ const route = useRoute();
 
 const {push} = useRouter();
 
-const existing = ref(route.params.id !== undefined);
+const existing = computed(() => route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
   return updateModel(modelId.value, values.value);
@@ -112,9 +112,14 @@ const editorSetup = {
 };
 
 onMounted(() => {
-  get("items/" + route.params.id + "/").then((response) => {
-    values.value = response.data;
-  });
+  values.value = {
+    events: []
+  }
+  if(existing.value) {
+    get("items/" + route.params.id).then((response) => {
+      values.value = response.data;
+    });
+  }
 });
 </script>
 

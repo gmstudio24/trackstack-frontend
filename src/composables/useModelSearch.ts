@@ -14,6 +14,7 @@ export const useModelSearch = <T = any>(settings: ModelSearchSettings) => {
     },
     filters: {
       sortBy: 'id',
+      direction: 'asc',
     },
     pagination: {
       page: 1,
@@ -27,6 +28,7 @@ export const useModelSearch = <T = any>(settings: ModelSearchSettings) => {
       page: data.pagination.page,
       perPage: data.pagination.limit,
       sortBy: data.filters.sortBy,
+      direction: data.filters.direction,
     });
     data.table.data = results.data;
     data.pagination.page = results.meta.current_page;
@@ -37,11 +39,12 @@ export const useModelSearch = <T = any>(settings: ModelSearchSettings) => {
     [
       () => data.pagination.limit,
       () => data.pagination.page,
-      () => data.filters.sortBy,
+      () => data.filters,
     ],
     () => {
       indexData();
-    }
+    }, 
+    {deep: true}
   );
 
   onMounted(() => {

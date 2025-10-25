@@ -9,7 +9,8 @@
       <SortingBar
         @update:sort-by="
           (e) => {
-            props.data.filters.sortBy = e;
+            props.data.filters.sortBy = e.by;
+            props.data.filters.direction = e.direction;
           }
         "
         @update:limit="

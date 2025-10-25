@@ -27,27 +27,21 @@ import DashboardLayout from "@/components/DashboardLayout.vue";
 import DataTable from "@/components/datatable/DataTable.vue";
 import ObjectEditor from "@/components/editor/ObjectEditor.vue";
 import {useApi} from "@/composables/useApi";
-import {
-  DialogButtonsType,
-  DialogResponse,
-  useDialog,
-} from "@/composables/useDialog";
 import { useEditor } from "@/composables/useEditor";
 import { useModelApi } from "@/composables/useModelApi";
-import {useSafeLock} from "@/composables/useSafeLock";
-import {computed, onMounted, readonly, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
 const {safeExit} = useEditor();
 
-const {createModel, getModel, updateModel, deleteModel} = useModelApi('location')
-const {get, patch, del, post} = useApi();
+const {createModel, updateModel, deleteModel} = useModelApi('location')
+const {get} = useApi();
 
 const modelId = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
 
 const route = useRoute();
 const {push} = useRouter();
-const existing = ref(route.params.id !== undefined);
+const existing = computed(() => route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
   return updateModel(modelId.value, values.value)
@@ -134,9 +128,14 @@ const itemsActions = ref<Array<any>>([
 ]);
 
 onMounted(() => {
-  get("locations/" + route.params.id + "/").then((response) => {
-    values.value = response.data;
-  });
+  values.value = {
+      items: []
+    }
+  if(existing.value) {
+    get("locations/" + route.params.id).then((response) => {
+      values.value = response.data;
+    });
+  }
 });
 </script>
 

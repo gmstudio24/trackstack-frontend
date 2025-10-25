@@ -1,7 +1,7 @@
 import { computed, ref } from "vue";
 import { useApi } from "../useApi";
 
-const authenticated = ref<boolean>(localStorage.getItem("auth.authenticated") === "true");
+const authenticated = ref<boolean>(sessionStorage.getItem("auth.authenticated") === "true");
 
 export const useAuth = () => {
   const {post} = useApi();
@@ -9,14 +9,14 @@ export const useAuth = () => {
   const auth = ({password, email}: {password: string; email: string}) => {
     return post("login", {email, password}).then(() => {
       authenticated.value = true;
-      localStorage.setItem("auth.authenticated", "true");
+      sessionStorage.setItem("auth.authenticated", "true");
     });
   };
 
   const unauth = () => {
     return post("logout", {}).then(() => {
       authenticated.value = false;
-      localStorage.removeItem("auth.authenticated");
+      sessionStorage.removeItem("auth.authenticated");
     });
   };
 
