@@ -99,7 +99,7 @@ const submitDocument = () => {
     items: selected.value,
   }).then((response) => {
     window.open(
-      "http://trackstack.test/documents/view/" + response.data.id,
+      "https://api.trackstack.dev.gmstudio24.pl/documents/view/" + response.data.id,
       "_blank"
     );
   });
