@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-2 p-4 h-full">
+  <div class="flex flex-col gap-2 p-4 overflow-y-auto h-full">
     <div>
       <h1 class="text-3xl">
         {{ $t("pages." + props.settings.modelName + ".search.title") }}
