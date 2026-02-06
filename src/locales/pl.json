@@ -117,6 +117,11 @@
       },
       "new": {
         "title": "Nowa lokalizacja"
+      },
+      "common": {
+        "locationActions": "Akcje",
+        "makeReturnReminder": "Stwórz przypomnienie o zwrocie",
+        "invoiceReminder": "Informacja o mozliwości wystawienia faktury"
       }
     },
     "item": {

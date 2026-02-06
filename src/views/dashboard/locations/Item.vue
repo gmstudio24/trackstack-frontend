@@ -23,12 +23,12 @@
           :rows="values.items"
         />
       </Card>
-      <Card v-if="existing" :title="'locationActions'">
+      <Card v-if="existing" :title="$t('pages.location.common.locationActions')">
         <Button @click="issueReminderDocument"
-          >Stwórz przypomnienie o zwrocie</Button
+          >{{ $t('pages.location.common.makeReturnReminder') }}</Button
         >
         <Checkbox v-model="documentSettings.invoiceReminder"
-          >Przypomnienie o zwrotach</Checkbox
+          >{{ $t('pages.location.common.invoiceReminder') }}</Checkbox
         >
       </Card>
     </ObjectEditor>
