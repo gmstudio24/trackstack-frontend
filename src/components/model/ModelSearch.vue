@@ -5,7 +5,7 @@
         {{ $t("pages." + props.settings.modelName + ".search.title") }}
       </h1>
     </div>
-    <div>
+    <div class="">
       <SortingBar
         @update:sort-by="
           (e) => {

@@ -1,5 +1,11 @@
 <template>
-  <DashboardLayout :title="existing ? $t('pages.location.edit.title') : $t('pages.location.new.title')">
+  <DashboardLayout
+    :title="
+      existing
+        ? $t('pages.location.edit.title')
+        : $t('pages.location.new.title')
+    "
+  >
     <ObjectEditor
       route-back="/dashboard/locations"
       v-model="values"
@@ -17,48 +23,67 @@
           :rows="values.items"
         />
       </Card>
+      <Card v-if="existing" :title="'locationActions'">
+        <Button @click="issueReminderDocument"
+          >Stwórz przypomnienie o zwrocie</Button
+        >
+        <Checkbox v-model="documentSettings.invoiceReminder"
+          >Przypomnienie o zwrotach</Checkbox
+        >
+      </Card>
     </ObjectEditor>
   </DashboardLayout>
 </template>
 
 <script setup lang="ts">
 import Card from "@/components/blocks/Card.vue";
+import Button from "@/components/buttons/Button.vue";
 import DashboardLayout from "@/components/DashboardLayout.vue";
 import DataTable from "@/components/datatable/DataTable.vue";
 import ObjectEditor from "@/components/editor/ObjectEditor.vue";
+import Checkbox from "@/components/input/Checkbox.vue";
+import {useDocument} from "@/composables/documents/useDocument";
 import {useApi} from "@/composables/useApi";
-import { useEditor } from "@/composables/useEditor";
-import { useModelApi } from "@/composables/useModelApi";
+import {useEditor} from "@/composables/useEditor";
+import {useModelApi} from "@/composables/useModelApi";
 import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 
 const {safeExit} = useEditor();
 
-const {createModel, updateModel, deleteModel} = useModelApi('location')
+const {createModel, updateModel, deleteModel} = useModelApi("location");
 const {get} = useApi();
 
-const modelId = computed(() => Array.isArray(route.params.id) ? route.params.id[0] : route.params.id)
+const modelId = computed(() =>
+  Array.isArray(route.params.id) ? route.params.id[0] : route.params.id,
+);
+
+const {issueDocument, openDocument} = useDocument();
 
 const route = useRoute();
 const {push} = useRouter();
 const existing = computed(() => route.params.id !== undefined);
 
 const makeSaveRequest = async () => {
-  return updateModel(modelId.value, values.value)
+  return updateModel(modelId.value, values.value);
 };
 
 const makeCreateRequest = async () => {
-  return createModel(values.value)
+  return createModel(values.value);
 };
 
-const save = async () => route.params.id ? makeSaveRequest() : makeCreateRequest();
+const save = async () =>
+  route.params.id ? makeSaveRequest() : makeCreateRequest();
 
 const deleteItem = () => {
-  return deleteModel(modelId.value)
+  return deleteModel(modelId.value);
 };
 
-const exit = () => {
-};
+const exit = () => {};
+
+const documentSettings = ref({
+  invoiceReminder: false,
+});
 
 const editorSetup = {
   fieldgroups: [
@@ -127,11 +152,22 @@ const itemsActions = ref<Array<any>>([
   },
 ]);
 
+const issueReminderDocument = () => {
+  issueDocument({
+    type: "stand-return-reminder",
+    location: values.value,
+    items: values.value.items,
+    data: {invoice_information: documentSettings.value.invoiceReminder},
+  }).then((id) => {
+    openDocument(id);
+  });
+};
+
 onMounted(() => {
   values.value = {
-      items: []
-    }
-  if(existing.value) {
+    items: [],
+  };
+  if (existing.value) {
     get("locations/" + route.params.id).then((response) => {
       values.value = response.data;
     });

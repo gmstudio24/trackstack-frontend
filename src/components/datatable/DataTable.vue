@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col flex-1 overflow-x-auto" v-auto-animate>
+    <div class="flex flex-col flex-1 overflow-x-auto overflow-y-auto" v-auto-animate>
         <div v-if="props.selectable">
           <Button :disabled="selectedRows?.length === 0" @click="selectedRows = []">Odznacz wszystko</Button>
           <span class="ml-4">Zaznaczone: {{ selectedRows?.length }}</span>
